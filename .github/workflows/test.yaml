@@ -1,0 +1,30 @@
+name: Publish to TestPyPI
+
+on:
+  pull_request:
+    types: [opened, synchronize] # Runs on new PRs and updates
+  push:
+    branches:
+      - main # Runs on PR merge
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # Required for Trusted Publisher authentication
+
+    defaults:
+      run:
+        working-directory: packages/python # Set working directory
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Show GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
